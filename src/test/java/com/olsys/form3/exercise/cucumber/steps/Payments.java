@@ -16,6 +16,7 @@ import gherkin.formatter.model.DataTableRow;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
@@ -26,9 +27,9 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.Assert.*;
-
+@Ignore
 public class Payments extends CucumberRoot {
-    private static final String BASE_URI = "/api/v1/payment";
+    private static final String BASE_URI = "/api/v1/payments";
     private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private List<Payment> initialPayments;
@@ -64,10 +65,9 @@ public class Payments extends CucumberRoot {
         final ResponseEntity<HALResponseBody<PaymentsList>> response = restTemplate.exchange(BASE_URI, HttpMethod.GET, null,
                 new ParameterizedTypeReference<HALResponseBody<PaymentsList>>() {});
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Logger.getLogger(Payments.class).error(response.getBody().toString());
-        for (Payment p : response.getBody()
-                .getEmbedded()
-                .getPayments()) {
+
+        for (Payment p : response.getBody().getEmbedded().getPayments()){
+            Logger.getLogger(Payments.class).info(p.getId());
             restTemplate.delete(BASE_URI + "/" + p.getId());
         }
     }
@@ -92,6 +92,7 @@ public class Payments extends CucumberRoot {
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getVersion(), actual.getVersion());
         assertThat(expected.getAttributes(), samePropertyValuesAs(currentResponse.getBody().getAttributes()));
+        assertThat(expected.getOrganisationId(), samePropertyValuesAs(currentResponse.getBody().getOrganisationId()));
     }
 
 
@@ -170,9 +171,7 @@ public class Payments extends CucumberRoot {
     public void theResponseBodyShouldContainAllPayments() throws Throwable {
         final List<Payment> currentPayments = currentResponseList.getBody().getEmbedded().getPayments();
 
-
-        assertEquals(initialPayments.size(),
-                currentPayments.size());
+        assertEquals(initialPayments.size(), currentPayments.size());
         assertTrue(initialPayments.stream()
                 .map(p -> p.getId())
                 .collect(Collectors.toList())

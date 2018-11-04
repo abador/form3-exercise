@@ -1,6 +1,7 @@
 package com.olsys.form3.exercise.cucumber.helper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import gherkin.deps.com.google.gson.GsonBuilder;
 
 import java.io.Serializable;
 
@@ -22,4 +23,6 @@ public class HALResponseBody<T> implements Serializable {
     public void setEmbedded(T embedded) {
         this.embedded = embedded;
     }
+
+    public String toString() { return new GsonBuilder().setPrettyPrinting().create().toJson(this); }
 }

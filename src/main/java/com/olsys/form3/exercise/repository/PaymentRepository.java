@@ -6,6 +6,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.UUID;
 
-@RepositoryRestResource(collectionResourceRel = "payment", path = "payment")
+@RepositoryRestResource(collectionResourceRel = "payments", path = "payments")
 public interface PaymentRepository extends MongoRepository<Payment,UUID> {
 }

@@ -1,6 +1,8 @@
 package com.olsys.form3.exercise.cucumber.helper;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.olsys.form3.exercise.model.Attributes;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
 
@@ -17,6 +19,8 @@ public class Payment {
 
     private String version;
 
+    @Field("organisation_id")
+    private UUID organisationId;
 
     private Attributes attributes;
 
@@ -43,8 +47,14 @@ public class Payment {
     public void setVersion(String version) {
         this.version = version;
     }
+    @JsonProperty("organisation_id")
+    public UUID getOrganisationId() {
+        return organisationId;
+    }
 
-
+    public void setOrganisationId(UUID organisationId) {
+        this.organisationId = organisationId;
+    }
 
     public Attributes getAttributes() {
         return attributes;
